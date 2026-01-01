@@ -1,4 +1,4 @@
-package top.liewyoung.aiwechat.ui.component
+package top.liewyoung.aiwechat.ui.component.button
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandLess
