@@ -11,9 +11,11 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import top.liewyoung.aiwechat.R
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -22,7 +24,7 @@ fun AIWeChatMainTopAppBar(currentMessages: Int, onSearchClick: () -> Unit, onAdd
     CenterAlignedTopAppBar(
         title = {
             Text(
-                text = if (currentMessages > 0) "Chat(${currentMessages})" else "Chat",
+                text = if (currentMessages > 0) stringResource(R.string.chat)+"(${currentMessages})" else stringResource(R.string.chat),
                 fontWeight = FontWeight.Bold
             )
         },

@@ -15,6 +15,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.res.stringResource
+import top.liewyoung.aiwechat.R
 import top.liewyoung.aiwechat.ui.screen.bottomScreen.AccountScreen
 import top.liewyoung.aiwechat.ui.screen.bottomScreen.ChatListScreen
 import top.liewyoung.aiwechat.ui.screen.contact.ContactListScreen
@@ -35,19 +37,19 @@ fun MainScreen(
             NavigationBar {
                 NavigationBarItem(
                     icon = { Icon(Icons.Default.Chat, contentDescription = "聊天") },
-                    label = { Text("聊天") },
+                    label = { Text(stringResource(R.string.chat)) },
                     selected = selectedTab == 0,
                     onClick = { selectedTab = 0 }
                 )
                 NavigationBarItem(
                     icon = { Icon(Icons.Default.Contacts, contentDescription = "联系人") },
-                    label = { Text("联系人") },
+                    label = { Text(stringResource(R.string.contract)) },
                     selected = selectedTab == 1,
                     onClick = { selectedTab = 1 }
                 )
                 NavigationBarItem(
                     icon = { Icon(Icons.Default.AccountCircle, contentDescription = "我") },
-                    label = { Text("我") },
+                    label = { Text(stringResource(R.string.me)) },
                     selected = selectedTab == 2,
                     onClick = { selectedTab = 2 }
                 )

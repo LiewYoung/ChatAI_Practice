@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">AI WeChat</string>
+    <string name="me">我</string>
+    <string name="chat">聊天</string>
+    <string name="contract">联系人</string>
+    <string name="settings">设置</string>
+    <string name="about">关于</string>
 </resources>

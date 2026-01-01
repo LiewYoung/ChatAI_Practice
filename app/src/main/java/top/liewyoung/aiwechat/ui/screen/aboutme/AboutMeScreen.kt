@@ -13,8 +13,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForwardIos
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Star
@@ -24,6 +24,7 @@ import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -35,22 +36,31 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import top.liewyoung.aiwechat.ui.theme.AIWeChatTheme
 import top.liewyoung.aiwechat.BuildConfig
+import top.liewyoung.aiwechat.R
 
 
-val githubIcon = top.liewyoung.aiwechat.R.drawable.github_mark
+val githubIcon = R.drawable.github_mark
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AboutMeScreen() {
+fun AboutMeScreen(onBackClicked:()-> Unit) {
     Scaffold(
         topBar = {
-            CenterAlignedTopAppBar(title = { Text("关于") })
+            CenterAlignedTopAppBar(
+                title = { Text(stringResource(R.string.about), fontWeight = FontWeight.Bold)},
+                navigationIcon = {
+                    IconButton(onClick = onBackClicked) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                    }
+                }
+            )
         }
     ) { paddingValues ->
         Column(
@@ -65,7 +75,7 @@ fun AboutMeScreen() {
 
             // 应用名称
             Text(
-                text = "AI WeChat",
+                text = stringResource(R.string.app_name),
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
@@ -184,7 +194,7 @@ fun AboutMeScreenPreview() {
     // import top.liewyoung.aiwechat.ui.theme.AIWeChatTheme
     // AIWeChatTheme {
     AIWeChatTheme {
-        AboutMeScreen()
+        AboutMeScreen {}
     }
     // }
 }

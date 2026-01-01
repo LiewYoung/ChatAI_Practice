@@ -1,7 +1,9 @@
 package top.liewyoung.aiwechat.ui.screen.contact
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -39,12 +41,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import top.liewyoung.aiwechat.AIWeChatApplication
+import top.liewyoung.aiwechat.R
 import top.liewyoung.aiwechat.model.Contact
 import top.liewyoung.aiwechat.viewmodel.ContactViewModel
 
@@ -65,7 +69,7 @@ fun ContactListScreen(
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text("联系人", fontWeight = FontWeight.Bold) },
+                title = { Text(stringResource(R.string.contract), fontWeight = FontWeight.Bold) },
                 actions = {
                     IconButton(onClick = { showMenu = true }) {
                         Icon(Icons.Default.MoreVert, contentDescription = "更多")
@@ -120,7 +124,9 @@ fun ContactListScreen(
                     ContactCard(
                         contact = contact,
                         onClick = { onContactClick(contact.id) },
-                        onShare = { onShareContact(contact.id) }
+                        onShare = { onShareContact(contact.id) },
+                        onDelete = viewModel::deleteContact,
+                        id = contact.id
                     )
                     Spacer(modifier = Modifier.size(8.dp))
                 }
@@ -129,11 +135,21 @@ fun ContactListScreen(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ContactCard(contact: Contact, onClick: () -> Unit, onShare: () -> Unit) {
-    Card(modifier = Modifier
-        .fillMaxWidth()
-        .clickable(onClick = onClick)) {
+fun ContactCard(contact: Contact, onClick: () -> Unit, onShare: () -> Unit, onDelete:(String)-> Unit,id: String) {
+    var isExpand by remember { mutableStateOf(false) }
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .combinedClickable(
+                onClick = onClick,
+                onLongClick = {
+                    isExpand = true
+                }
+            )
+    ) {
         Row(
             modifier = Modifier
                 .padding(16.dp)
@@ -163,5 +179,18 @@ fun ContactCard(contact: Contact, onClick: () -> Unit, onShare: () -> Unit) {
 
             IconButton(onClick = onShare) { Icon(Icons.Default.Share, contentDescription = "分享") }
         }
+        DropdownMenu(
+            expanded = isExpand,
+            onDismissRequest = { isExpand = false }
+        ) {
+            DropdownMenuItem(
+                text = { Text("删除联系人") },
+                onClick = {
+                    onDelete(id)
+                    isExpand = false;
+                }
+            )
+        }
     }
+
 }

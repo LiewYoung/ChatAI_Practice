@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -75,7 +76,7 @@ fun AccountScreen(onMessageButtonClicked: () -> Unit, onSettingsClicked: () -> U
                         modifier = Modifier.fillMaxWidth().padding(16.dp)
                 ) {
                     Icon(imageVector = Icons.Default.Settings, contentDescription = "设置")
-                    Text(text = "设置", modifier = Modifier.padding(start = 16.dp).weight(1f))
+                    Text(text = stringResource(R.string.settings), modifier = Modifier.padding(start = 16.dp).weight(1f))
                     Icon(
                             imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
                             contentDescription = null

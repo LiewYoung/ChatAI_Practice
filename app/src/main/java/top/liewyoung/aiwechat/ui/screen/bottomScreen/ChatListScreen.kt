@@ -65,8 +65,7 @@ fun ChatListScreen(
                 onSearchClick = { /* TODO: Implement search */ },
                 onAddClick = onAddContact
             ) 
-        },
-        bottomBar = { AIWeChatMainBottomBar(onContactsClick, onAccountClick) }
+        }
     ) { inner ->
         MainBody(
             inner,
