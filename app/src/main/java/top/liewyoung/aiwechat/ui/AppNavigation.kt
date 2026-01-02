@@ -1,5 +1,8 @@
 package top.liewyoung.aiwechat.ui
 
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -42,7 +45,14 @@ fun AppNavigation() {
                     .provideContactViewModelFactory()
         )
 
-    NavHost(navController = navController, startDestination = AppDestinations.MAIN_ROUTE) {
+    NavHost(
+        navController = navController,
+        startDestination = AppDestinations.MAIN_ROUTE,
+        enterTransition = { slideInHorizontally(initialOffsetX = { fullWidth -> fullWidth }, animationSpec = tween(400)) },
+        exitTransition = { slideOutHorizontally(targetOffsetX = { fullWidth -> -fullWidth }, animationSpec = tween(400)) },
+        popEnterTransition = { slideInHorizontally(initialOffsetX = { fullWidth -> -fullWidth }, animationSpec = tween(400)) },
+        popExitTransition = { slideOutHorizontally(targetOffsetX = { fullWidth -> fullWidth }, animationSpec = tween(400)) }
+    ) {
         composable(AppDestinations.MAIN_ROUTE) {
             MainScreen(
                 onNavigateToSettings = {
@@ -109,7 +119,7 @@ fun AppNavigation() {
         composable(
             route = AppDestinations.ABOUT_ME
         ) {
-            AboutMeScreen(){
+            AboutMeScreen() {
                 navController.popBackStack()
             }
         }

@@ -42,7 +42,7 @@ class ChatRepository(private val userPreferencesStore: DataStore<UserPreferences
         }
     }
 
-    suspend fun getChatContext(contactId: String, limit: Int = 10): List<ChatMessage> {
+    suspend fun getChatContext(contactId: String, limit: Int = 1024): List<ChatMessage> {
         val prefs = userPreferencesStore.data.first()
         return prefs.messagesList
             .filter { it.contactId == contactId }

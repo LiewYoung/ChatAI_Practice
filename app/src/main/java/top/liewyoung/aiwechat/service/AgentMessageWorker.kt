@@ -37,8 +37,8 @@ class AgentMessageWorker(context: Context, params: WorkerParameters) :
                                 return Result.success()
                         }
 
-                        // Randomly select a contact (30% chance to send a message)
-                        if (Random.nextFloat() > 0.3f) {
+                        // Randomly select a contact (50% chance to send a message)
+                        if (Random.nextFloat() > 0.5f) {
                                 return Result.success()
                         }
 
@@ -46,7 +46,7 @@ class AgentMessageWorker(context: Context, params: WorkerParameters) :
 
                         // Get chat history for context
                         val chatHistory =
-                                appContainer.chatRepository.getChatContext(contact.id, limit = 10)
+                                appContainer.chatRepository.getChatContext(contact.id, limit = 1024)
 
                         // Generate proactive message
                         val result =
