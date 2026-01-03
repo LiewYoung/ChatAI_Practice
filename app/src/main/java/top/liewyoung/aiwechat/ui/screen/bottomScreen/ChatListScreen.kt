@@ -48,8 +48,6 @@ import top.liewyoung.aiwechat.viewmodel.ChatListViewModel
 @Composable
 fun ChatListScreen(
     onChatClick: (String) -> Unit,
-    onContactsClick: () -> Unit,
-    onAccountClick: () -> Unit,
     onAddContact: () -> Unit,
     viewModel: ChatListViewModel = viewModel(
         factory = (LocalContext.current.applicationContext as AIWeChatApplication).container.provideChatListViewModelFactory()

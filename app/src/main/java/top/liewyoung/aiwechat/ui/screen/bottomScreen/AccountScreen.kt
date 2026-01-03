@@ -18,6 +18,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -36,12 +37,11 @@ import top.liewyoung.aiwechat.ui.theme.AIWeChatTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AccountScreen(onMessageButtonClicked: () -> Unit, onSettingsClicked: () -> Unit) {
+fun AccountScreen( onSettingsClicked: () -> Unit) {
     Scaffold(
             topBar = {
                 CenterAlignedTopAppBar(title = { Text("我", fontWeight = FontWeight.Bold) })
             },
-            bottomBar = { AIWeChatMainBottomBar(onMessageButtonClicked) {} }
     ) { inner ->
         Column(
                 modifier = Modifier.padding(inner).fillMaxSize(),
@@ -75,7 +75,7 @@ fun AccountScreen(onMessageButtonClicked: () -> Unit, onSettingsClicked: () -> U
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.fillMaxWidth().padding(16.dp)
                 ) {
-                    Icon(imageVector = Icons.Default.Settings, contentDescription = "设置")
+                    Icon(imageVector = Icons.Default.Settings, contentDescription = "设置", tint = MaterialTheme.colorScheme.primary)
                     Text(text = stringResource(R.string.settings), modifier = Modifier.padding(start = 16.dp).weight(1f))
                     Icon(
                             imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
@@ -90,5 +90,5 @@ fun AccountScreen(onMessageButtonClicked: () -> Unit, onSettingsClicked: () -> U
 @Preview
 @Composable
 fun AccountScreenPreview() {
-    AIWeChatTheme { AccountScreen({}, {}) }
+    AIWeChatTheme { AccountScreen({}) }
 }

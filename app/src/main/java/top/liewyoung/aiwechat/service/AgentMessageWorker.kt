@@ -15,7 +15,7 @@ import top.liewyoung.aiwechat.MainActivity
 import top.liewyoung.aiwechat.R
 import top.liewyoung.aiwechat.model.ChatMessage
 
-/** WorkManager worker for generating proactive agent messages */
+/** WorkManage 控制主动式消息 */
 class AgentMessageWorker(context: Context, params: WorkerParameters) :
         CoroutineWorker(context, params) {
 
