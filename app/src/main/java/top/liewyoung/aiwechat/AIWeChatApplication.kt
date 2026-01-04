@@ -20,15 +20,11 @@ class AIWeChatApplication : Application() {
     }
 
     private fun setupAgentMessaging() {
-        // Set up periodic work for agent proactive messaging
         val constraints =
                 Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
 
         val agentWorkRequest =
-                PeriodicWorkRequestBuilder<AgentMessageWorker>(
-                                15,
-                                TimeUnit.MINUTES // Minimum interval for periodic work
-                        )
+                PeriodicWorkRequestBuilder<AgentMessageWorker>(15, TimeUnit.MINUTES)
                         .setConstraints(constraints)
                         .build()
 

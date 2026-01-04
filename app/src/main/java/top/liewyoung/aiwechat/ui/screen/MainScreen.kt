@@ -81,21 +81,21 @@ fun MainScreen(
                     Spacer(modifier = Modifier.size(24.dp))
 
                     NavigationDrawerItem(
-                        icon = { Icon(Icons.Default.Chat, contentDescription = "聊天") },
+                        icon = { Icon(Icons.Default.Chat, contentDescription = "聊天",tint = MaterialTheme.colorScheme.primary) },
                         label = { Text(stringResource(R.string.chat)) },
                         selected = selectedTab == 0,
                         onClick = { selectedTab = 0 }
                     )
 
                     NavigationDrawerItem(
-                        icon = { Icon(Icons.Default.Contacts, contentDescription = "联系人") },
+                        icon = { Icon(Icons.Default.Contacts, contentDescription = "联系人",tint = MaterialTheme.colorScheme.primary) },
                         label = { Text(stringResource(R.string.contract)) },
                         selected = selectedTab == 1,
                         onClick = { selectedTab = 1 }
                     )
 
                     NavigationDrawerItem(
-                        icon = { Icon(Icons.Default.AccountCircle, contentDescription = "我") },
+                        icon = { Icon(Icons.Default.AccountCircle, contentDescription = "我",tint = MaterialTheme.colorScheme.primary) },
                         label = { Text(stringResource(R.string.me)) },
                         selected = selectedTab == 2,
                         onClick = { selectedTab = 2 }
@@ -122,7 +122,6 @@ fun MainScreen(
             Row(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(innerPadding)
             ) {
 
                 if (navigationBarType == NavigationType.SIDE_NAVIGATION_BAR) {
@@ -160,19 +159,19 @@ fun MainScreen(
 fun NavigationBarsBottom(selectedTab: Int, onClickItem: (Int) -> Unit) {
     NavigationBar {
         NavigationBarItem(
-            icon = { Icon(Icons.Default.Chat, contentDescription = "聊天") },
+            icon = { Icon(Icons.Default.Chat, contentDescription = "聊天", tint = MaterialTheme.colorScheme.primary) },
             label = { Text(stringResource(R.string.chat)) },
             selected = selectedTab == 0,
             onClick = { onClickItem(0) }
         )
         NavigationBarItem(
-            icon = { Icon(Icons.Default.Contacts, contentDescription = "联系人") },
+            icon = { Icon(Icons.Default.Contacts, contentDescription = "联系人",tint = MaterialTheme.colorScheme.primary) },
             label = { Text(stringResource(R.string.contract)) },
             selected = selectedTab == 1,
             onClick = { onClickItem(1) }
         )
         NavigationBarItem(
-            icon = { Icon(Icons.Default.AccountCircle, contentDescription = "我") },
+            icon = { Icon(Icons.Default.AccountCircle, contentDescription = "我",tint = MaterialTheme.colorScheme.primary) },
             label = { Text(stringResource(R.string.me)) },
             selected = selectedTab == 2,
             onClick = { onClickItem(2) }
@@ -187,7 +186,7 @@ fun NavigationBarsRail(selectedTab: Int, onClickItem: (Int) -> Unit) {
         modifier = Modifier.fillMaxHeight()
     ) {
         NavigationRailItem(
-            icon = { Icon(Icons.Default.Chat, contentDescription = "聊天") },
+            icon = { Icon(Icons.Default.Chat, contentDescription = "聊天",tint = MaterialTheme.colorScheme.primary) },
             label = { Text(stringResource(R.string.chat)) },
             selected = selectedTab == 0,
             modifier = Modifier.weight(1f),
@@ -195,7 +194,7 @@ fun NavigationBarsRail(selectedTab: Int, onClickItem: (Int) -> Unit) {
         )
 
         NavigationRailItem(
-            icon = { Icon(Icons.Default.Contacts, contentDescription = "联系人") },
+            icon = { Icon(Icons.Default.Contacts, contentDescription = "联系人",tint = MaterialTheme.colorScheme.primary) },
             label = { Text(stringResource(R.string.contract)) },
             selected = selectedTab == 1,
             modifier = Modifier.weight(1f),
@@ -203,7 +202,7 @@ fun NavigationBarsRail(selectedTab: Int, onClickItem: (Int) -> Unit) {
         )
 
         NavigationRailItem(
-            icon = { Icon(Icons.Default.AccountCircle, contentDescription = "我") },
+            icon = { Icon(Icons.Default.AccountCircle, contentDescription = "我",tint = MaterialTheme.colorScheme.primary) },
             label = { Text(stringResource(R.string.me)) },
             selected = selectedTab == 2,
             modifier = Modifier.weight(1f),

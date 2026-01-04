@@ -1,12 +1,15 @@
 package top.liewyoung.aiwechat.ui.screen
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.ScrollableState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
@@ -42,6 +45,8 @@ import top.liewyoung.aiwechat.ui.theme.AIWeChatTheme
 import top.liewyoung.aiwechat.viewmodel.SettingsUiState
 import top.liewyoung.aiwechat.viewmodel.SettingsViewModel
 
+
+// TODO(设置可滚动项)
 @Composable
 fun SettingsScreen(
     onBackClicked: () -> Unit,
@@ -71,6 +76,8 @@ fun SettingsScreenContent(
     var baseUrl by remember { mutableStateOf(uiState.baseUrl) }
     var model by remember { mutableStateOf(uiState.model) }
 
+    val scrollState = rememberScrollState()
+
     LaunchedEffect(uiState) {
         apiKey = uiState.apiKey
         baseUrl = uiState.baseUrl
@@ -94,6 +101,7 @@ fun SettingsScreenContent(
                 .padding(innerPadding)
                 .fillMaxSize()
                 .padding(16.dp)
+                .verticalScroll(scrollState)
         ) {
             OutlinedTextField(
                 value = apiKey,

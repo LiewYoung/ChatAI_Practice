@@ -1,157 +1,92 @@
 package top.liewyoung.aiwechat.data
 
-import androidx.datastore.core.DataStore
 import java.util.UUID
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import top.liewyoung.aiwechat.UserPreferences
+import top.liewyoung.aiwechat.data.database.ContactDao
+import top.liewyoung.aiwechat.data.database.ContactEntity
 import top.liewyoung.aiwechat.model.Contact
 
 /** Repository for managing contacts */
-class ContactRepository(private val userPreferencesStore: DataStore<UserPreferences>) {
+class ContactRepository(private val contactDao: ContactDao) {
 
     fun getAllContacts(): Flow<List<Contact>> =
-            userPreferencesStore.data.map { prefs ->
-                prefs.contactsList
-                        .map { contactProto ->
-                            Contact(
-                                    id = contactProto.id,
-                                    name = contactProto.name,
-                                    avatar = contactProto.avatar.ifEmpty { "😀" },
-                                    prompt = contactProto.prompt,
-                                    lastMessageTime = contactProto.lastMessageTime,
-                                    lastMessage = contactProto.lastMessage.ifEmpty { null },
-                                    unreadCount = contactProto.unreadCount,
-                                    createdAt = contactProto.createdAt
-                            )
-                        }
-                        .sortedByDescending { it.lastMessageTime }
+            contactDao.getAllContacts().map {
+                it.map { contactEntity ->
+                    Contact(
+                            id = contactEntity.id,
+                            name = contactEntity.name,
+                            avatar = contactEntity.avatar.ifEmpty { "😀" },
+                            prompt = contactEntity.prompt,
+                            lastMessageTime = contactEntity.lastMessageTime,
+                            lastMessage = contactEntity.lastMessage?.ifEmpty { null },
+                            unreadCount = contactEntity.unreadCount,
+                            createdAt = contactEntity.createdAt
+                    )
+                }
             }
 
     fun getContactById(id: String): Flow<Contact?> =
-            userPreferencesStore.data.map { prefs ->
-                prefs.contactsList.find { it.id == id }?.let { contactProto ->
+            contactDao.getContactById(id).map {
+                it?.let { contactEntity ->
                     Contact(
-                            id = contactProto.id,
-                            name = contactProto.name,
-                            avatar = contactProto.avatar.ifEmpty { "😀" },
-                            prompt = contactProto.prompt,
-                            lastMessageTime = contactProto.lastMessageTime,
-                            lastMessage = contactProto.lastMessage.ifEmpty { null },
-                            unreadCount = contactProto.unreadCount,
-                            createdAt = contactProto.createdAt
+                            id = contactEntity.id,
+                            name = contactEntity.name,
+                            avatar = contactEntity.avatar.ifEmpty { "😀" },
+                            prompt = contactEntity.prompt,
+                            lastMessageTime = contactEntity.lastMessageTime,
+                            lastMessage = contactEntity.lastMessage?.ifEmpty { null },
+                            unreadCount = contactEntity.unreadCount,
+                            createdAt = contactEntity.createdAt
                     )
                 }
             }
 
     suspend fun addContact(contact: Contact) {
-        userPreferencesStore.updateData { prefs ->
-            val contactProto =
-                    top.liewyoung.aiwechat.Contact.newBuilder()
-                            .setId(contact.id.ifEmpty { UUID.randomUUID().toString() })
-                            .setName(contact.name)
-                            .setAvatar(contact.avatar)
-                            .setPrompt(contact.prompt)
-                            .setLastMessageTime(contact.lastMessageTime)
-                            .setLastMessage(contact.lastMessage ?: "")
-                            .setUnreadCount(contact.unreadCount)
-                            .setCreatedAt(contact.createdAt)
-                            .build()
-
-            prefs.toBuilder().addContacts(contactProto).build()
-        }
+        val contactEntity = ContactEntity(
+                id = contact.id.ifEmpty { UUID.randomUUID().toString() },
+                name = contact.name,
+                avatar = contact.avatar,
+                prompt = contact.prompt,
+                lastMessageTime = contact.lastMessageTime,
+                lastMessage = contact.lastMessage ?: "",
+                unreadCount = contact.unreadCount,
+                createdAt = contact.createdAt
+        )
+        contactDao.insertContact(contactEntity)
     }
 
     suspend fun updateContact(contact: Contact) {
-        userPreferencesStore.updateData { prefs ->
-            val updatedContacts =
-                    prefs.contactsList.map { existingContact ->
-                        if (existingContact.id == contact.id) {
-                            existingContact
-                                    .toBuilder()
-                                    .setName(contact.name)
-                                    .setAvatar(contact.avatar)
-                                    .setPrompt(contact.prompt)
-                                    .setLastMessageTime(contact.lastMessageTime)
-                                    .setLastMessage(contact.lastMessage ?: "")
-                                    .setUnreadCount(contact.unreadCount)
-                                    .build()
-                        } else {
-                            existingContact
-                        }
-                    }
-
-            prefs.toBuilder().clearContacts().addAllContacts(updatedContacts).build()
-        }
+        val contactEntity = ContactEntity(
+                id = contact.id,
+                name = contact.name,
+                avatar = contact.avatar,
+                prompt = contact.prompt,
+                lastMessageTime = contact.lastMessageTime,
+                lastMessage = contact.lastMessage ?: "",
+                unreadCount = contact.unreadCount,
+                createdAt = contact.createdAt
+        )
+        contactDao.updateContact(contactEntity)
     }
 
     suspend fun deleteContact(id: String) {
-        userPreferencesStore.updateData { prefs ->
-            val filteredContacts = prefs.contactsList.filter { it.id != id }
-            prefs.toBuilder().clearContacts().addAllContacts(filteredContacts).build()
-        }
+        contactDao.deleteContactById(id)
     }
 
     suspend fun updateLastMessage(contactId: String, message: String, timestamp: Long) {
-        userPreferencesStore.updateData { prefs ->
-            val updatedContacts =
-                    prefs.contactsList.map { contact ->
-                        if (contact.id == contactId) {
-                            contact.toBuilder()
-                                    .setLastMessage(message)
-                                    .setLastMessageTime(timestamp)
-                                    .build()
-                        } else {
-                            contact
-                        }
-                    }
-
-            prefs.toBuilder().clearContacts().addAllContacts(updatedContacts).build()
-        }
+        contactDao.updateLastMessage(contactId, message, timestamp)
     }
 
     suspend fun clearLastMessage(contactId: String) {
-        userPreferencesStore.updateData { prefs ->
-            val updatedContacts =
-                    prefs.contactsList.map { contact ->
-                        if (contact.id == contactId) {
-                            contact.toBuilder().setLastMessage("").setLastMessageTime(0L).build()
-                        } else {
-                            contact
-                        }
-                    }
-
-            prefs.toBuilder().clearContacts().addAllContacts(updatedContacts).build()
-        }
+        contactDao.clearLastMessage(contactId)
     }
 
     suspend fun incrementUnreadCount(contactId: String) {
-        userPreferencesStore.updateData { prefs ->
-            val updatedContacts =
-                    prefs.contactsList.map { contact ->
-                        if (contact.id == contactId) {
-                            contact.toBuilder().setUnreadCount(contact.unreadCount + 1).build()
-                        } else {
-                            contact
-                        }
-                    }
-
-            prefs.toBuilder().clearContacts().addAllContacts(updatedContacts).build()
-        }
+        contactDao.incrementUnreadCount(contactId)
     }
 
     suspend fun clearUnreadCount(contactId: String) {
-        userPreferencesStore.updateData { prefs ->
-            val updatedContacts =
-                    prefs.contactsList.map { contact ->
-                        if (contact.id == contactId) {
-                            contact.toBuilder().setUnreadCount(0).build()
-                        } else {
-                            contact
-                        }
-                    }
-
-            prefs.toBuilder().clearContacts().addAllContacts(updatedContacts).build()
-        }
+        contactDao.clearUnreadCount(contactId)
     }
 }

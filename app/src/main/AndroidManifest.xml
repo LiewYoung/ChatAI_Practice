@@ -11,6 +11,8 @@
     <!-- Notification permission for Android 13+ -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
+    <uses-feature android:name="android.hardware.camera" />
+
     <application
         android:name=".AIWeChatApplication"
         android:allowBackup="true"

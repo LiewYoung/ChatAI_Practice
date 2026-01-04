@@ -1,45 +1,76 @@
 package top.liewyoung.aiwechat.di
 
 import android.content.Context
-import androidx.datastore.core.DataStore
-import androidx.datastore.dataStore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import top.liewyoung.aiwechat.UserPreferences
+import top.liewyoung.aiwechat.data.AccountRepository
 import top.liewyoung.aiwechat.data.ChatRepository
 import top.liewyoung.aiwechat.data.ContactRepository
 import top.liewyoung.aiwechat.data.SettingsRepository
-import top.liewyoung.aiwechat.data.UserPreferencesSerializer
+import top.liewyoung.aiwechat.data.database.AppDatabase
 import top.liewyoung.aiwechat.data.llm.LLMClient
+import top.liewyoung.aiwechat.viewmodel.AccountViewModel
 import top.liewyoung.aiwechat.viewmodel.AddContactViewModel
 import top.liewyoung.aiwechat.viewmodel.ChatListViewModel
 import top.liewyoung.aiwechat.viewmodel.ChatViewModel
 import top.liewyoung.aiwechat.viewmodel.ContactViewModel
 import top.liewyoung.aiwechat.viewmodel.SettingsViewModel
 
-private const val USER_PREFERENCES_NAME = "user_preferences"
-
-private val Context.userPreferencesStore: DataStore<UserPreferences> by dataStore(
-    fileName = USER_PREFERENCES_NAME,
-    serializer = UserPreferencesSerializer
-)
-
 class AppContainer(private val context: Context) {
 
+    // 初始化Room数据库
+    private val database by lazy {
+        AppDatabase.getDatabase(context)
+    }
+
+    // 初始化DAO
+    private val settingsDao by lazy {
+        database.settingsDao()
+    }
+
+    private val contactDao by lazy {
+        database.contactDao()
+    }
+
+    private val chatMessageDao by lazy {
+        database.chatMessageDao()
+    }
+
+    private val accountDao by lazy {
+        database.accountDao()
+    }
+
+    // 初始化Repository
     private val settingsRepository by lazy {
-        SettingsRepository(context.userPreferencesStore)
+        SettingsRepository(settingsDao)
     }
 
     val contactRepository by lazy {
-        ContactRepository(context.userPreferencesStore)
+        ContactRepository(contactDao)
     }
 
     val chatRepository by lazy {
-        ChatRepository(context.userPreferencesStore)
+        ChatRepository(chatMessageDao)
     }
 
     val llmClient by lazy {
         LLMClient(settingsRepository)
+    }
+
+    val accountRepository by lazy {
+        AccountRepository(accountDao)
+    }
+
+    fun provideAccountViewModelFactory(): ViewModelProvider.Factory {
+        return object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                if (modelClass.isAssignableFrom(AccountViewModel::class.java)) {
+                    return AccountViewModel(accountRepository) as T
+                }
+                throw IllegalArgumentException("Unknown ViewModel class")
+            }
+        }
     }
 
     fun provideSettingsViewModelFactory(): ViewModelProvider.Factory {
@@ -95,7 +126,12 @@ class AppContainer(private val context: Context) {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 if (modelClass.isAssignableFrom(ChatViewModel::class.java)) {
                     @Suppress("UNCHECKED_CAST")
-                    return ChatViewModel(contactId, contactRepository, chatRepository, llmClient) as T
+                    return ChatViewModel(
+                        contactId,
+                        contactRepository,
+                        chatRepository,
+                        llmClient
+                    ) as T
                 }
                 throw IllegalArgumentException("Unknown ViewModel class")
             }
